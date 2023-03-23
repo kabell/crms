@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file, Response
 
 from crms import config
 from crms.models import db, Day
@@ -132,3 +132,11 @@ def view():
     if cur_cycle:
         cycles.append(cur_cycle)
     return render_template("view.j2",cycles=cycles)
+
+@app.route("/sw.js")
+def binary() -> Response:
+
+    return send_file(
+        "static/sw.js",
+        download_name="sw.js",  # type: ignore
+    )
