@@ -1,21 +1,19 @@
 {% extends 'layout.j2' %}
 
 {% block content %}
-    <div class="container">
-    <div class="page-header" id="banner">
+    <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-3 col-md-1 d-flex justify-content-center">
+      <div class="col-3">
           <a href="/?day={{ prev_day }}"><h1><i class="fa-solid fa-arrow-left"></i></h1></a>
       </div>
-        <div class="col-sm-6 col-md-3 d-flex justify-content-center">
+        <div class="col-6 ">
             <h1>{% if day.is_today() %}Dnes {% else %} {{ day.date }} {% endif %}</h1>
         </div>
-        <div class="col-sm-3 col-md-1 d-flex justify-content-center">
+        <div class="col-3 ">
           <a href="/?day={{ next_day }}"><h1><i class="fa-solid fa-arrow-right"></i></h1></a>
       </div>
-    </div>
-  </div>
-
+    <div class="row">
+    <div class="col">
     <form action="/?day={{ day.date }}" method="post">
         <label for="title">Kategória</label>
         <select name="category">
@@ -92,5 +90,8 @@
         <br>
         <button type="submit">Submit</button>
     </form>
+    </div>
+    </div>
+    </div>
     </div>
 {% endblock %}
