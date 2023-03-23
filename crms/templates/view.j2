@@ -1,0 +1,36 @@
+{% extends 'layout.j2' %}
+
+{% block content %}
+    <style>
+    .cell {
+        vertical-align: top;
+        text-align:center;
+        height:166px;
+        border-style: solid;
+        border-width:1px;
+    }
+
+    </style>
+    <div class="container-flex">
+<table style="border-style: solid; border-width:1px">
+    {% for cycle in cycles %}
+    <tr>
+        {% for day in cycle %}
+            {% if day==None %}
+            <td class="cell" style="width:100px;"><div>{{ loop.index }}</div></td>
+
+            {% else %}
+        <td class="cell" style="background-image:url({{ url_for('static', filename=day.category+".png") }})">
+        <div style="width:100px;">{{ loop.index }}</div>
+        <div style="margin-top:0px"><a style="color: black" href="/?day={{ day.date }}">{{ day.date }}</a></div>
+        <div style="margin-top:0px; font-size: 70px; height:100px;">{{ day.format_peak() }} </div>
+        <div style="margin-top:0px">{{ day.format() }}</div>
+        </td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+</table>
+    </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "crms"
+version = "0.1.0"
+description = ""
+authors = ["Michal Korbela <michal.korbela@kiwi.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "2.2.3"
+flask-sqlalchemy = "3.0.3"
+kiwi-structlog-config = "0.1.8"
+envparse = "0.2.0"
+pymysql = "^1.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
