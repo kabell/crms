@@ -4,13 +4,15 @@
     <div class="container">
     <div class="page-header" id="banner">
     <div class="row">
-      <div class="col-lg-8 col-md-7 col-sm-6">
-        <h1>Deň {{ day.date }}</h1>
+      <div class="col-sm-3 col-md-1 d-flex justify-content-center">
+          <a href="/?day={{ prev_day }}"><h1><i class="fa-solid fa-arrow-left"></i></h1></a>
       </div>
-        <div class="col-lg-8 col-md-7 col-sm-6">
-            <a href="/?day={{ prev_day }}"><h4>Predošlý {{ prev_day }}</h4></a>
-            <a href="/?day={{ next_day }}"><h4>Nasledujúci {{ next_day }}</h4></a>
+        <div class="col-sm-6 col-md-3 d-flex justify-content-center">
+            <h1>{% if day.is_today() %}Dnes {% else %} {{ day.date }} {% endif %}</h1>
         </div>
+        <div class="col-sm-3 col-md-1 d-flex justify-content-center">
+          <a href="/?day={{ next_day }}"><h1><i class="fa-solid fa-arrow-right"></i></h1></a>
+      </div>
     </div>
   </div>
 
@@ -85,7 +87,7 @@
         <br>
         <textarea name="notes"
                   rows="4"
-                  cols="60"
+                  cols="30"
                   >{{ day.notes }}</textarea>
         <br>
         <button type="submit">Submit</button>

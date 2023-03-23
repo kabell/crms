@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -18,7 +20,7 @@ class Day(db.Model):
     new_cycle = db.Column(db.Boolean)
     created = db.Column(db.DateTime)
 
-    def format(self):
+    def format(self) ->str:
         menstrual = self.menstrual if self.menstrual != "N/A" else ""
         observation = self.indicator if self.indicator !="N/A" else ""
         observation += self.color if self.color != "N/A" else ""
@@ -40,12 +42,16 @@ class Day(db.Model):
             return s1+sep+s2
         return s1 or s2
 
-    def format_peak(self):
+    def format_peak(self) ->str:
         if self.peak:
             return "P"
         if self.day_count:
             return str(self.day_count)
         return ""
+
+    def is_today(self) ->bool:
+        return self.date == date.today()
+
 
 
 
