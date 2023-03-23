@@ -15,6 +15,23 @@ pymysql = "^1.0.2"
 gunicorn = "^20.1.0"
 
 
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.2.0"
+
+[tool.pylint]
+    [tool.pylint.master]
+    jobs=0
+
+    [tool.pylint.'MESSAGES CONTROL']
+    disable = ['duplicate-code,missing-docstring,line-too-long,no-member,wrong-import-position,locally-disabled,abstract-method,fixme,too-few-public-methods,ungrouped-imports,invalid-name,too-many-arguments,too-many-locals,too-many-instance-attributes,too-many-branches,too-many-public-methods,no-name-in-module']
+
+    [tool.pylint.'REPORTS']
+    output-format=['colorized']
+
+
+    [tool.pylint.'LOGGING']
+    logging-modules=['logging,structlog']
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

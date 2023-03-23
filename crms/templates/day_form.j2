@@ -17,7 +17,7 @@
     <form action="/?day={{ day.date }}" method="post">
         <label for="title">Kategória</label>
         <select name="category">
-            {%  for name, verbose_name in category_values.items() %}
+            {%  for name, verbose_name in values["category"].items() %}
             <option value="{{ name }}" {% if name==day.category %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -25,7 +25,7 @@
 
         <label for="title">Menštruácia</label>
         <select name="menstrual">
-            {%  for name, verbose_name in menstrual_values.items() %}
+            {%  for name, verbose_name in values["menstrual"].items() %}
             <option value="{{ name }}" {% if name==day.menstrual %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -33,7 +33,7 @@
 
         <label for="title">Pozorovanie</label>
         <select name="indicator">
-            {%  for name, verbose_name in indicator_values.items() %}
+            {%  for name, verbose_name in values["indicator"].items() %}
             <option value="{{ name }}" {% if name==day.indicator %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -41,7 +41,7 @@
 
         <label for="title">Farba</label>
         <select name="color">
-            {%  for name, verbose_name in color_values.items() %}
+            {%  for name, verbose_name in values["color"].items() %}
             <option value="{{ name }}" {% if name==day.color %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -49,7 +49,7 @@
 
         <label for="title">Pocit</label>
         <select name="sensation">
-            {%  for name, verbose_name in sensation_values.items() %}
+            {%  for name, verbose_name in values["sensation"].items() %}
             <option value="{{ name }}" {% if name==day.sensation %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -57,7 +57,7 @@
 
         <label for="title">Frekvencia</label>
         <select name="frequency">
-            {%  for name, verbose_name in frequency_values.items() %}
+            {%  for name, verbose_name in values["frequency"].items() %}
             <option value="{{ name }}" {% if name==day.frequency %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
@@ -69,7 +69,7 @@
 
         <label for="title">Počet dní</label>
         <select name="day_count">
-            {%  for name, verbose_name in day_count_values.items() %}
+            {%  for name, verbose_name in values["day_count"].items() %}
             <option value="{{ name }}" {% if name==day.day_count %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
