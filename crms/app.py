@@ -1,15 +1,29 @@
+import json
 from datetime import date, datetime, timedelta
+from typing import Union
 
-from flask import Flask, Response, render_template, request, send_file
+from flask import (
+    Flask,
+    Response,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    url_for,
+)
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.security import check_password_hash
 
 from crms import config
-from crms.models import Day, DayHistory, db
+from crms.login_manager import login_manager
+from crms.models import Day, DayHistory, User, db
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = config.DATABASE_URL
 app.secret_key = config.SECRET_KEY.encode()
 
 db.init_app(app)
+login_manager.init_app(app)
 
 with app.app_context():
     db.create_all()
@@ -41,6 +55,7 @@ values = {
         "10DL": "10DL - Vlhko s klzkosťou",
         "10SL": "10SL - Lesk s klzkosťou",
         "10WL": "10WL - Mokro s klzkosťou",
+        "?X?": "?X? - Ani srnka netuší",
     },
     "color": {
         "N/A": "Žiadne",
@@ -76,6 +91,7 @@ values = {
 
 
 @app.route("/", methods=["GET", "POST"])
+@login_required
 def index() -> str:
     day_date = (
         date.fromisoformat(request.args["day"])
@@ -100,12 +116,14 @@ def index() -> str:
             created=datetime.now(),
         )
 
+    saved = False
     if request.method == "POST":
         day.from_dict(request.form)
         day_history = DayHistory.from_day(day)
         db.session.add(day_history)
         db.session.add(day)
         db.session.commit()
+        saved = True
 
     return render_template(
         "day_form.j2",
@@ -113,16 +131,14 @@ def index() -> str:
         prev_day=day.date - timedelta(days=1),
         next_day=day.date + timedelta(days=1),
         values=values,
+        saved=saved,
     )
 
 
 @app.route("/view")
+@login_required
 def view() -> str:
-    days = (
-        Day.query.where(Day.date > date.today() - timedelta(days=30))
-        .order_by(Day.date)
-        .all()
-    )
+    days = Day.query.order_by(Day.date).all()
     cycles: list[list[Day]] = []
     cur_cycle: list[Day] = []
     for day in days:
@@ -144,4 +160,45 @@ def binary() -> Response:
     return send_file(
         "static/sw.js",
         download_name="sw.js",  # type: ignore
+    )
+
+
+@app.route("/login", methods=["GET"])
+def login() -> Union[str, Response]:
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+    return render_template("login.j2")
+
+
+@app.route("/login", methods=["POST"])
+def login_post() -> Union[Response, str]:
+    name = request.form.get("name")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(name=name).first()
+
+    if not user or not check_password_hash(user.password, password):
+        return render_template("login.j2", login_failed=True)
+
+    login_user(user, remember=True)
+
+    return redirect(url_for("index"))
+
+
+@app.route("/logout", methods=["GET"])
+@login_required
+def logout() -> Response:
+    logout_user()
+    return redirect(url_for("login"))
+
+
+@app.route("/export", methods=["GET"])
+@login_required
+def export() -> Response:
+    data = json.dumps([day.to_dict() for day in Day.query.order_by(Day.date).all()])
+
+    return Response(
+        data,
+        mimetype="application/json",
+        headers={"Content-Disposition": "attachment;filename=crms.json"},
     )

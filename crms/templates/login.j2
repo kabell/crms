@@ -1,0 +1,28 @@
+{% extends 'layout.j2' %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <form method="post" action="{{ url_for('login_post') }}">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="position-relative form-group"><input name="name" placeholder="Username"
+                                                                             class="form-control"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="position-relative form-group"><input name="password" placeholder="Password"
+                                                                             type="password" class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg">Login to Dashboard</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

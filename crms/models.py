@@ -68,6 +68,23 @@ class Day(db.Model):  # type: ignore
         self.new_cycle = "new_cycle" in form
         self.notes = form["notes"]
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "category": self.category,
+            "menstrual": self.menstrual,
+            "indicator": self.indicator,
+            "color": self.color,
+            "sensation": self.sensation,
+            "frequency": self.frequency,
+            "peak": self.peak,
+            "day_count": self.day_count,
+            "intercourse": self.intercourse,
+            "new_cycle": self.new_cycle,
+            "notes": self.notes,
+            "date": self.date.isoformat(),
+        }
+
 
 class DayHistory(db.Model):  # type: ignore
     id = db.Column(db.Integer, primary_key=True)
@@ -102,3 +119,38 @@ class DayHistory(db.Model):  # type: ignore
             new_cycle=day.new_cycle,
             created=datetime.now(),
         )
+
+
+class User(db.Model):  # type: ignore
+    __tablename__ = "user"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    password = db.Column(db.String(512), nullable=False)
+    api_token = db.Column(db.String(255))
+
+    def is_active(self) -> bool:
+        """True, as all users are active."""
+        return True
+
+    def get_id(self) -> int:
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return self.id
+
+    def is_authenticated(self) -> bool:
+        """Return True if the user is authenticated."""
+        return True
+
+    def is_anonymous(self) -> bool:
+        """False, as anonymous users aren't supported."""
+        return False
+
+    @classmethod
+    def create(cls, *args, commit=False, **kwargs):  # type: ignore
+        instance = cls(*args, **kwargs)
+
+        db.session.add(instance)
+
+        if commit:
+            db.session.commit()
+        return instance
