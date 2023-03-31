@@ -1,5 +1,7 @@
+import csv
 import json
 from datetime import date, datetime, timedelta
+from io import StringIO
 from typing import Union
 
 from flask import (
@@ -201,4 +203,20 @@ def export() -> Response:
         data,
         mimetype="application/json",
         headers={"Content-Disposition": "attachment;filename=crms.json"},
+    )
+
+
+@app.route("/export_csv", methods=["GET"])
+@login_required
+def export_csv() -> Response:
+    f = StringIO()
+    writer = csv.DictWriter(f, fieldnames=Day().to_dict().keys())
+    writer.writeheader()
+    for day in Day.query.order_by(Day.date).all():
+        writer.writerow(day.to_dict())
+
+    return Response(
+        f.getvalue().encode(),
+        mimetype="application/csv",
+        headers={"Content-Disposition": "attachment;filename=crms.csv"},
     )

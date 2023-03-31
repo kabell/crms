@@ -82,7 +82,7 @@ class Day(db.Model):  # type: ignore
             "intercourse": self.intercourse,
             "new_cycle": self.new_cycle,
             "notes": self.notes,
-            "date": self.date.isoformat(),
+            "date": self.date.isoformat() if self.date else None,
         }
 
 
