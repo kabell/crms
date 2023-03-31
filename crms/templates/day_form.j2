@@ -15,18 +15,27 @@
     <div class="row">
     <div class="col d-flex justify-content-center">
     <form action="/?day={{ day.date }}" method="post">
-        <label for="title">Kategória</label>
-        <select name="category">
-            {%  for name, verbose_name in values["category"].items() %}
-            <option value="{{ name }}" {% if name==day.category %}selected{% endif %}>{{ verbose_name }}</option>
-            {% endfor %}
-        </select>
+        {%  for name, verbose_name in values["category"].items() %}
+            <label>
+              <input type="radio" name="category" value="{{ name }}" {% if name==day.category %}checked{% endif %}>
+              <img src="{{ url_for('static', filename="category_"+name+".png")  }}">
+            </label>
+        {% endfor %}
+        <br>
         <br>
 
         <label for="title">Menštruácia</label>
         <select name="menstrual">
             {%  for name, verbose_name in values["menstrual"].items() %}
             <option value="{{ name }}" {% if name==day.menstrual %}selected{% endif %}>{{ verbose_name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="title">Pocit</label>
+        <select name="sensation">
+            {%  for name, verbose_name in values["sensation"].items() %}
+            <option value="{{ name }}" {% if name==day.sensation %}selected{% endif %}>{{ verbose_name }}</option>
             {% endfor %}
         </select>
         <br>
@@ -47,13 +56,6 @@
         </select>
         <br>
 
-        <label for="title">Pocit</label>
-        <select name="sensation">
-            {%  for name, verbose_name in values["sensation"].items() %}
-            <option value="{{ name }}" {% if name==day.sensation %}selected{% endif %}>{{ verbose_name }}</option>
-            {% endfor %}
-        </select>
-        <br>
 
         <label for="title">Frekvencia</label>
         <select name="frequency">

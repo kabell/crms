@@ -86,7 +86,7 @@ def index() -> str:
     day = Day.query.filter_by(date=day_date).first()
     if not day:
         day = Day(
-            category="red",
+            category="N/A",
             menstrual="N/A",
             indicator="N/A",
             color="N/A",
@@ -135,7 +135,7 @@ def view() -> str:
         cur_cycle.append(day)
     if cur_cycle:
         cycles.append(cur_cycle)
-    return render_template("view.j2", cycles=cycles)
+    return render_template("view.j2", cycles=reversed(cycles))
 
 
 @app.route("/sw.js")

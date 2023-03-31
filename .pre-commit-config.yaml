@@ -1,0 +1,77 @@
+default_language_version:
+  python: python3.9
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^.*\.md$
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: no-commit-to-branch
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: detect-private-key
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: check-merge-conflict
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.17.0
+    hooks:
+      - id: gitlint
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.28.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.32.2
+    hooks:
+      - id: markdownlint
+        language_version: system
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        # extra dependencies for config in pyproject.toml
+        additional_dependencies: ['toml', 'pyproject']
+
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v2.15.4
+    hooks:
+      - id: pylint
+        exclude: ^.*(migrations/).*$
+        # disabled import-error as may be run out of environment with deps
+        args: ["--disable=import-error"]
+        additional_dependencies: ['toml', 'pyproject']
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.1.1
+    hooks:
+      - id: mypy
+        args: [
+            --config-file=mypy.ini,
+            --no-incremental,
+            --warn-unused-configs,
+            --no-strict-optional,
+            --ignore-missing-imports
+        ]
+
+        # These folders slow down mypy, so it takes 10x more time.
+        exclude: ^.*(migrations).*$
+        additional_dependencies:
+          - pydantic
+          - toml
+          - docstring_parser
+          - swagger_ui_bundle
+          - types-requests
+          - types-pytz
