@@ -39,7 +39,7 @@
             <ul class="navbar-nav">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/view">Náhľad</a>
+                    <a class="nav-link" href="{{ url_for('overview') }}">Náhľad</a>
                 </li>
                 <li style="display:none;" id="install-button">
                     <a href="#">
@@ -48,13 +48,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/export">Export JSON</a>
+                    <a class="nav-link" href="{{ url_for('export_json') }}">Export JSON</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/export_csv">Export CSV</a>
+                    <a class="nav-link" href="{{ url_for('export_csv') }}">Export CSV</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Odhlásiť</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}">Odhlásiť ({{ current_user.name }})</a>
                 </li>
                 {% endif %}
             </ul>

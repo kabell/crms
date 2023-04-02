@@ -1,14 +1,78 @@
 from __future__ import annotations
 
-from datetime import date, datetime
+import datetime
+from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash
 
 db = SQLAlchemy()
 
 
-class Day(db.Model):  # type: ignore
+class BaseModel(db.Model):  # type: ignore
+    __abstract__ = True
+
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated = db.Column(
+        db.DateTime,
+        onupdate=datetime.datetime.utcnow,
+        default=datetime.datetime.utcnow,
+        index=True,
+    )
+
+    @classmethod
+    def create(cls, *args: Any, commit: bool = False, **kwargs: Any) -> Any:
+        instance = cls(*args, **kwargs)
+
+        db.session.add(instance)
+
+        if commit:
+            db.session.commit()
+        return instance
+
+
+class User(BaseModel):  # type: ignore
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    password = db.Column(db.String(512), nullable=False)
+    api_token = db.Column(db.String(255))
+    days = db.relationship(
+        "Day",
+        backref=db.backref("day"),
+        lazy="dynamic",
+    )
+    day_history = db.relationship(
+        "DayHistory",
+        backref=db.backref("day_history"),
+        lazy="dynamic",
+    )
+
+    def is_active(self) -> bool:
+        """True, as all users are active."""
+        return True
+
+    def get_id(self) -> int:
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return self.id
+
+    def is_authenticated(self) -> bool:
+        """Return True if the user is authenticated."""
+        return True
+
+    def is_anonymous(self) -> bool:
+        """False, as anonymous users aren't supported."""
+        return False
+
+    def verify_password(self, password: str) -> bool:
+        return check_password_hash(self.password, password)
+
+
+class Day(BaseModel):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey(User.id, ondelete="CASCADE"), nullable=False
+    )
     category = db.Column(db.String(32))
     menstrual = db.Column(db.String(32))
     indicator = db.Column(db.String(32))
@@ -21,7 +85,6 @@ class Day(db.Model):  # type: ignore
     notes = db.Column(db.String(512))
     date = db.Column(db.Date, unique=True)
     new_cycle = db.Column(db.Boolean)
-    created = db.Column(db.DateTime)
 
     def format(self) -> str:
         menstrual = self.menstrual if self.menstrual != "N/A" else ""
@@ -53,7 +116,7 @@ class Day(db.Model):  # type: ignore
         return ""
 
     def is_today(self) -> bool:
-        return self.date == date.today()
+        return self.date == datetime.date.today()
 
     def from_dict(self, form: dict) -> None:
         self.category = form["category"]
@@ -62,10 +125,10 @@ class Day(db.Model):  # type: ignore
         self.color = form["color"]
         self.sensation = form["sensation"]
         self.frequency = form["frequency"]
-        self.peak = "peak" in form
+        self.peak = form["peak"]
         self.day_count = form["day_count"]
-        self.intercourse = "intercourse" in form
-        self.new_cycle = "new_cycle" in form
+        self.intercourse = form["intercourse"]
+        self.new_cycle = form["new_cycle"]
         self.notes = form["notes"]
 
     def to_dict(self) -> dict:
@@ -85,9 +148,30 @@ class Day(db.Model):  # type: ignore
             "date": self.date.isoformat() if self.date else None,
         }
 
+    @classmethod
+    def default(cls, user_id: int, day_date: datetime.date) -> Day:
+        return cls(
+            user_id=user_id,
+            category="N/A",
+            menstrual="N/A",
+            indicator="N/A",
+            color="N/A",
+            sensation="N/A",
+            frequency="N/A",
+            peak=False,
+            day_count=0,
+            intercourse=False,
+            new_cycle=False,
+            notes="",
+            date=day_date,
+        )
 
-class DayHistory(db.Model):  # type: ignore
+
+class DayHistory(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey(User.id, ondelete="CASCADE"), nullable=False
+    )
     category = db.Column(db.String(32))
     menstrual = db.Column(db.String(32))
     indicator = db.Column(db.String(32))
@@ -100,11 +184,11 @@ class DayHistory(db.Model):  # type: ignore
     notes = db.Column(db.String(512))
     date = db.Column(db.Date)
     new_cycle = db.Column(db.Boolean)
-    created = db.Column(db.DateTime)
 
     @classmethod
     def from_day(cls, day: Day) -> DayHistory:
         return cls(
+            user_id=day.user_id,
             category=day.category,
             menstrual=day.menstrual,
             indicator=day.indicator,
@@ -117,40 +201,4 @@ class DayHistory(db.Model):  # type: ignore
             notes=day.notes,
             date=day.date,
             new_cycle=day.new_cycle,
-            created=datetime.now(),
         )
-
-
-class User(db.Model):  # type: ignore
-    __tablename__ = "user"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
-    email = db.Column(db.String(255), nullable=False, unique=True)
-    password = db.Column(db.String(512), nullable=False)
-    api_token = db.Column(db.String(255))
-
-    def is_active(self) -> bool:
-        """True, as all users are active."""
-        return True
-
-    def get_id(self) -> int:
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.id
-
-    def is_authenticated(self) -> bool:
-        """Return True if the user is authenticated."""
-        return True
-
-    def is_anonymous(self) -> bool:
-        """False, as anonymous users aren't supported."""
-        return False
-
-    @classmethod
-    def create(cls, *args, commit=False, **kwargs):  # type: ignore
-        instance = cls(*args, **kwargs)
-
-        db.session.add(instance)
-
-        if commit:
-            db.session.commit()
-        return instance
