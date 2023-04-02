@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY pyproject.toml poetry.lock  /app/
 
-RUN pip install --upgrade pip==22.0.4 setuptools && \
+RUN pip install --upgrade pip==23.0.1 setuptools && \
    curl -sSL https://install.python-poetry.org | python - && \
    export PATH="/root/.local/bin:$PATH" && \
    poetry config virtualenvs.create false --local && \
