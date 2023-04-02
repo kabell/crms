@@ -10,6 +10,6 @@ Web aplikácia určená na zapisovanie pozorovaní pre Creightonský model.
 docker-compose up
 ```
 
-Po spustení je aplikácia dostupná na `http://localhost:8080`, a je prázdna - treba si vytvoriť účet.
+Po spustení je aplikácia dostupná na `http://localhost:8080`, a je prázdna - treba si registráciou vytvoriť účet.
 
-DB Adminer je dostupný na `http:localhost:80áť`, login: `root`, password: `example`
+DB Adminer je dostupný na `http:localhost:8085`, login: `root`, password: `example`
