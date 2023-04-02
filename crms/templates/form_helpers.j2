@@ -1,0 +1,28 @@
+{% macro render_field(field) %}
+  <b>{{ field.label }}</b>
+  {{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class="text-danger">
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_ratio_field(field) %}
+  <b>{{ field.label }}</b>
+{% for subfield in field %}
+   <label>
+    {{ subfield(**kwargs) }}
+    <img src="/static/category_{{ subfield.data }}.png">
+  </label>
+{% endfor %}
+  {% if field.errors %}
+    <ul class="text-danger">
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}
