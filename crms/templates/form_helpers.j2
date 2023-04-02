@@ -11,7 +11,6 @@
 {% endmacro %}
 
 {% macro render_ratio_field(field) %}
-  <b>{{ field.label }}</b>
 {% for subfield in field %}
    <label>
     {{ subfield(**kwargs) }}
