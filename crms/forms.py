@@ -8,7 +8,6 @@ from wtforms import (
     RadioField,
     SelectField,
     StringField,
-    TextAreaField,
     validators,
 )
 
@@ -130,4 +129,4 @@ class DayForm(Form):
     day_count = SelectField("Počet dní", choices=day_count.items())
     intercourse = BooleanField("Pohlavný styk")
     new_cycle = BooleanField("Nový cyklus")
-    notes = TextAreaField("Poznámka")
+    notes = StringField("Poznámka")

@@ -54,13 +54,15 @@
 
     </div>
     </div></div>
+     {% if saved %}
     <div class="row">
-    <div class="col"></div>
-            {% if saved %}
-    <div class="alert alert-success d-flex align-items-center" role="alert">
-      Uložené
+    <div class="col d-flex justify-content-center mt-2">
+    <div class="alert alert-success" style="width: 370px;" role="alert">
+      <div class="m-auto">Uložené</div>
+    </div>
+    </div>
     </div>
     {% endif %}
-    </div>
+
     </div>
 {% endblock %}

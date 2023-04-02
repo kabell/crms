@@ -23,14 +23,14 @@ from crms.models import Day, DayHistory, User, db
 app = Blueprint("", __name__, template_folder="templates")
 
 
+def get_day_date() ->date:
+    return date.fromisoformat(request.args["day"])   if request.args.get("day")    else date.today()
+
+
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index() -> str:
-    day_date = (
-        date.fromisoformat(request.args["day"])
-        if request.args.get("day")
-        else date.today()
-    )
+    day_date = get_day_date()
 
     form = DayForm(request.form)
 
@@ -52,6 +52,7 @@ def index() -> str:
     return render_template(
         "day.j2",
         day=day,
+        day_date = day.date,
         prev_day=day.date - timedelta(days=1),
         next_day=day.date + timedelta(days=1),
         saved=saved,
@@ -75,7 +76,7 @@ def overview() -> str:
         cur_cycle.append(day)
     if cur_cycle:
         cycles.append(cur_cycle)
-    return render_template("overview.j2", cycles=reversed(cycles))
+    return render_template("overview.j2", cycles=reversed(cycles), day_date=get_day_date())
 
 
 @app.route("/sw.js")
