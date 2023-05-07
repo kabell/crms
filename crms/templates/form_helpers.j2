@@ -14,7 +14,7 @@
 {% for subfield in field %}
    <label>
     {{ subfield(**kwargs) }}
-    <img src="/static/category_{{ subfield.data }}.png">
+    <img style="width:50px" src="/static/category_{{ subfield.data }}.png">
   </label>
 {% endfor %}
   {% if field.errors %}
