@@ -80,9 +80,7 @@ def overview() -> str:
         cur_cycle.append(day)
     if cur_cycle:
         cycles.append(cur_cycle)
-    return render_template(
-        "overview.j2", cycles=reversed(cycles), day_date=get_day_date()
-    )
+    return render_template("overview.j2", cycles=cycles, day_date=get_day_date())
 
 
 @app.route("/sw.js")

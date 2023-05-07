@@ -16,8 +16,10 @@ from crms.models import User
 category = {
     "red": "Menštruácia",
     "green": "Sucho",
-    "gray": "Pred vrcholom",
-    "lightgreen": "Po vrchole",
+    "gray": "Hlien",
+    "lightgreen": "Sucho po vrchole",
+    "yellow": "Nekvalitný hlien",
+    "gold": "Nekvalitný potencialne plodný hlien",
 }
 menstrual = {
     "N/A": "Žiadne",
@@ -70,6 +72,12 @@ day_count = {
     1: 1,
     2: 2,
     3: 3,
+}
+
+arrow = {
+    "": "Žiadne",
+    "up": "Šípka hore",
+    "down": "Šípka dole",
 }
 
 
@@ -127,6 +135,7 @@ class DayForm(Form):
     frequency = SelectField("Frekvencia", choices=frequency.items())
     peak = BooleanField("Vrchol")
     day_count = SelectField("Počet dní", choices=day_count.items())
+    arrow = SelectField("Šípka", choices=arrow.items())
     intercourse = BooleanField("Pohlavný styk")
     new_cycle = BooleanField("Nový cyklus")
     notes = StringField("Poznámka")

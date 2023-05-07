@@ -33,7 +33,10 @@
         <td class="cell" style="background-image:url({{ url_for('static', filename=day.category+".png") }})">
         <div style="width:100px;">{{ loop.index }}</div>
         <div style="margin-top:0px"><a style="color: black" href="{{ url_for("index",day=day.date) }}">{{ day.date }}</a></div>
-        <div style="margin-top:0px; font-size: 50px; height:70px;">{{ day.format_peak() }} </div>
+        <div style="margin-top:0px; font-size: 50px; height:70px;">
+            {% if day.arrow=="up" %}<i class="fa-solid fa-arrow-up"></i>{% elif day.arrow=="down"%}<i class="fa-solid fa-arrow-down"></i>{% endif %}
+            {{ day.format_peak() }}
+        </div>
         <div style="margin-top:0px; height:20px; line-height: 0.8">{{ day.notes }} </div>
         <div style="margin-top:0px">{{ day.format() }}</div>
         </td>

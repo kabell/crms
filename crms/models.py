@@ -80,6 +80,7 @@ class Day(BaseModel):
     sensation = db.Column(db.String(32))
     frequency = db.Column(db.String(32))
     peak = db.Column(db.Boolean)
+    arrow = db.Column(db.String(32))
     day_count = db.Column(db.Integer)
     intercourse = db.Column(db.Boolean)
     notes = db.Column(db.String(512))
@@ -127,6 +128,7 @@ class Day(BaseModel):
         self.frequency = form["frequency"]
         self.peak = form["peak"]
         self.day_count = form["day_count"]
+        self.arrow = form["arrow"]
         self.intercourse = form["intercourse"]
         self.new_cycle = form["new_cycle"]
         self.notes = form["notes"]
@@ -142,6 +144,7 @@ class Day(BaseModel):
             "frequency": self.frequency,
             "peak": self.peak,
             "day_count": self.day_count,
+            "arrow": self.arrow,
             "intercourse": self.intercourse,
             "new_cycle": self.new_cycle,
             "notes": self.notes,
@@ -160,6 +163,7 @@ class Day(BaseModel):
             frequency="N/A",
             peak=False,
             day_count=0,
+            arrow="",
             intercourse=False,
             new_cycle=False,
             notes="",
@@ -180,6 +184,7 @@ class DayHistory(BaseModel):
     frequency = db.Column(db.String(32))
     peak = db.Column(db.Boolean)
     day_count = db.Column(db.Integer)
+    arrow = db.Column(db.String(32))
     intercourse = db.Column(db.Boolean)
     notes = db.Column(db.String(512))
     date = db.Column(db.Date)
@@ -197,6 +202,7 @@ class DayHistory(BaseModel):
             frequency=day.frequency,
             peak=day.peak,
             day_count=day.day_count,
+            arrow=day.arrow,
             intercourse=day.intercourse,
             notes=day.notes,
             date=day.date,
