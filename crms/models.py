@@ -4,6 +4,7 @@ import datetime
 from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import UniqueConstraint
 from werkzeug.security import check_password_hash
 
 db = SQLAlchemy()
@@ -84,8 +85,12 @@ class Day(BaseModel):
     day_count = db.Column(db.Integer)
     intercourse = db.Column(db.Boolean)
     notes = db.Column(db.String(512))
-    date = db.Column(db.Date, unique=True)
+    date = db.Column(db.Date)
     new_cycle = db.Column(db.Boolean)
+
+    __table_args__ = (
+        UniqueConstraint("date", "user_id", name="unique_date_per_user_id"),
+    )
 
     def format(self) -> str:
         menstrual = self.menstrual if self.menstrual != "N/A" else ""
